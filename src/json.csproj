@@ -1,16 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>SpecFlow.Internal.Json</AssemblyName>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <IsPackable>true</IsPackable>
-    <PackageId>TinyJson</PackageId>
-    <Title>TinyJson</Title>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <PackageId>SpecFlow.Internal.Json</PackageId>
+    <Title>SpecFlow.Internal.Json</Title>
     <PackageVersion>1.0.0</PackageVersion>
-    <Authors>Alex Parker</Authors>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/zanders3/json/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/zanders3/json</PackageProjectUrl>
+    <Authors>SpecFlow Team</Authors>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://specflow.org</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SpecFlowOSS/SpecFlow.Internal.Json</RepositoryUrl>
     <description>A really simple C# JSON parser.</description>
-    <Copyright>Copyright 2017</Copyright>
+    <Copyright>Copyright © SpecFlow Team</Copyright>
     <PackageTags>Json;Serialisation</PackageTags>
-    <RepositoryUrl>https://github.com/zanders3/json</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageOutputPath>./../GeneratedNugetPackages/$(Configuration)</PackageOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
 </Project>
