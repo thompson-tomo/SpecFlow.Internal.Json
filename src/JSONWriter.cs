@@ -13,8 +13,11 @@ namespace SpecFlow.Internal.Json
     //- Will only output public fields and property getters on objects
     public static class JSONWriter
     {
-        public static string ToJson(this object item)
+        private static JsonSerializerSettings _settings;
+
+        public static string ToJson(this object item, JsonSerializerSettings settings = null)
         {
+            _settings = settings ?? new JsonSerializerSettings();
             StringBuilder stringBuilder = new StringBuilder();
             AppendValue(stringBuilder, item);
             return stringBuilder.ToString();
@@ -80,11 +83,19 @@ namespace SpecFlow.Internal.Json
                 stringBuilder.Append(((bool)item) ? "true" : "false");
             }
             else if (type.IsEnum)
+            {
+                if (_settings.UseEnumUnderlyingValues)
+                {
+                    var underlyingValue = Convert.ChangeType(item, Enum.GetUnderlyingType(type));
+                    stringBuilder.Append(underlyingValue);
+                }
+                else
                 {
                     stringBuilder.Append('"');
                     stringBuilder.Append(item.ToString());
                     stringBuilder.Append('"');
                 }
+            }
             else if (item is IList)
             {
                 stringBuilder.Append('[');
@@ -158,7 +169,7 @@ namespace SpecFlow.Internal.Json
                         continue;
 
                     object value = propertyInfo[i].GetValue(item, null);
-                    if (value != null)
+                    if (value != null || !_settings.IgnoreNullValues)
                     {
                         if (isFirst)
                             isFirst = false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -265,7 +266,44 @@ namespace SpecFlow.Internal.Json.Tests
             Assert.IsTrue((string)obj["Foo"] == "Bar");
 
             string testJson = "{\"A\":123,\"B\":456,\"C\":\"789\",\"D\":[10,11,12]}";
-            Assert.AreEqual(testJson, ((Dictionary<string, object>)testJson.FromJson<object>()).ToJson());
+            var expected = new Dictionary<string, object>
+            {
+                {"A", 123},
+                {"B", 456},
+                {"C", "789"},
+                {"D", new List<object>() {10, 11, 12} }
+            };
+
+            var actual = testJson.FromJson<Dictionary<string, object>>();
+
+            var dictEqual = DictionariesEqual(expected, actual);
+            Assert.IsTrue(dictEqual);
+        }
+
+        private bool DictionariesEqual(Dictionary<string, object> dict1, Dictionary<string, object> dict2)
+        {
+            foreach (var pair in dict1)
+            {
+                if (!dict2.ContainsKey(pair.Key)) throw new Exception($"missing key: {pair.Key}");
+
+                var dict2Value = dict2[pair.Key];
+
+                if (pair.Value.GetType() == typeof(Dictionary<string, object>))
+                {
+                    DictionariesEqual(pair.Value as Dictionary<string, object>, dict2Value as Dictionary<string, object>);
+                }
+                else if (pair.Value.GetType() == typeof(List<object>))
+                {
+                    if (!(pair.Value as List<object>).SequenceEqual(dict2Value as List<object>))
+                        throw new Exception($"values not equal. Value1: {pair.Value} - Value2: {dict2Value}");
+                }
+                else
+                {
+                    if (!pair.Value.Equals(dict2Value))
+                        throw new Exception($"values not equal. Value1: {pair.Value} - Value2: {dict2Value}");
+                }
+            }
+            return true;
         }
 
         public struct NastyStruct
@@ -438,6 +476,23 @@ namespace SpecFlow.Internal.Json.Tests
              * The parser should store the last occurring value for the given key
              */
             Assert.AreEqual(dictionary["hello"], "hell", "The parser stored an incorrect value for the duplicated key");
+        }
+
+        public class UnderlyingEnumClass
+        {
+            public Color Colors;
+        }
+
+        [TestMethod]
+        [DataRow(Color.Red)]
+        [DataRow(Color.Green)]
+        [DataRow(Color.Blue)]
+        [DataRow(Color.Yellow)]
+        public void TestEnumUnderlyingValues(Color color)
+        {
+            var expected = $"{{\"Colors\":{(int)color}}}";
+            var underlyingEnumClass = expected.FromJson<UnderlyingEnumClass>();
+            Assert.AreEqual<Color>(underlyingEnumClass.Colors, color);
         }
     }
 }

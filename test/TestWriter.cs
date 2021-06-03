@@ -194,5 +194,46 @@ namespace SpecFlow.Internal.Json.Tests
                     Decimal = 10.1M
                 }.ToJson());
         }
+        
+        public enum ByteEnum : byte
+        {
+            Cyan = 170,
+            Gold = 255
+        }
+
+        public enum LongEnum : long
+        {
+            White = 9223372036854775800,
+            Black = 9223372036854775801
+        }
+
+        public enum ShortEnum : short
+        {
+            Orange = -10,
+            Pink = -32768,
+            Indigo = 32767
+        }
+
+        [TestMethod]
+        public void TestEnumUnderlyingValues()
+        {
+            var settings = new JsonSerializerSettings(useEnumUnderlyingValues: true);
+            
+            Assert.AreEqual("{\"Colors\":0}", new { Colors = Color.Red }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":1}", new { Colors = Color.Green }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":2}", new { Colors = Color.Blue }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":3}", new { Colors = Color.Yellow }.ToJson(settings));
+
+            Assert.AreEqual("{\"Colors\":170}", new { Colors = ByteEnum.Cyan }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":255}", new { Colors = ByteEnum.Gold }.ToJson(settings));
+
+            Assert.AreEqual("{\"Colors\":9223372036854775800}", new { Colors = LongEnum.White }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":9223372036854775801}", new { Colors = LongEnum.Black }.ToJson(settings));
+
+            Assert.AreEqual("{\"Colors\":-10}", new { Colors = ShortEnum.Orange }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":-32768}", new { Colors = ShortEnum.Pink }.ToJson(settings));
+            Assert.AreEqual("{\"Colors\":32767}", new { Colors = ShortEnum.Indigo }.ToJson(settings));
+        }
+
     }
 }
