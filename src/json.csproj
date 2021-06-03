@@ -17,6 +17,9 @@
     <PackageTags>Json;Serialisation</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageOutputPath>./../GeneratedNugetPackages/$(Configuration)</PackageOutputPath>
+
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>$(SolutionDir)\specflow.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
