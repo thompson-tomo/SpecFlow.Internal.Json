@@ -131,6 +131,9 @@ namespace SpecFlow.Internal.Json
             {
                 if (json.Length <= 2)
                     return string.Empty;
+                if (json == "null")
+                    return null;
+
                 StringBuilder parseStringBuilder = new StringBuilder(json.Length);
                 for (int i = 1; i < json.Length - 1; ++i)
                 {

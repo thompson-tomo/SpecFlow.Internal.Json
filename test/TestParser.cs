@@ -494,5 +494,13 @@ namespace SpecFlow.Internal.Json.Tests
             var underlyingEnumClass = expected.FromJson<UnderlyingEnumClass>();
             Assert.AreEqual<Color>(underlyingEnumClass.Colors, color);
         }
+
+        [TestMethod]
+        public void TestNull()
+        {
+            var expected = "{\"C\":null}";
+            var simpleObject = expected.FromJson<SimpleObject>();
+            Assert.AreEqual(null, simpleObject.C);
+        }
     }
 }

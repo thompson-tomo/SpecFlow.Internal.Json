@@ -235,5 +235,16 @@ namespace SpecFlow.Internal.Json.Tests
             Assert.AreEqual("{\"Colors\":32767}", new { Colors = ShortEnum.Indigo }.ToJson(settings));
         }
 
+        [TestMethod]
+        public void TestIgnoreNullValues()
+        {
+            Assert.AreEqual("{}", new { Address = (string)null }.ToJson());
+            Assert.AreEqual("{\"FirstName\":\"Bob\"}", new { FirstName = "Bob", Address = (string)null }.ToJson());
+
+            var settings = new JsonSerializerSettings(ignoreNullValues: false);
+            Assert.AreEqual("{\"Address\":null}", new { Address = (string)null }.ToJson(settings));
+            Assert.AreEqual("{\"FirstName\":\"Bob\",\"Address\":null}", new { FirstName = "Bob", Address = (string)null }.ToJson(settings));
+        }
+
     }
 }
