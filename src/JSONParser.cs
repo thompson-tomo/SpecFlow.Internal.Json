@@ -287,8 +287,7 @@ namespace SpecFlow.Internal.Json
             }
             if (json[0] == '"' && json[json.Length - 1] == '"')
             {
-                string str = json.Substring(1, json.Length - 2);
-                return str.Replace("\\", string.Empty);
+                return ParseValue(typeof(string), json);
             }
             if (char.IsDigit(json[0]) || json[0] == '-')
             {
