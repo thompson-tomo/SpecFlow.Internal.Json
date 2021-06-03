@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\json.csproj" />
+    <ProjectReference Include="..\src\SpecFlow.Internal.Json.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TinyJson;
 
-namespace TinyJson.Test
+namespace SpecFlow.Internal.Json.Tests
 {
     [TestClass]
     public class TestWriter

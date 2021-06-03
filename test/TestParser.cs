@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TinyJson;
+using SpecFlow.Internal.Json;
 
-namespace TinyJson.Test
+namespace SpecFlow.Internal.Json.Tests
 {
     [TestClass]
     public class TestParser

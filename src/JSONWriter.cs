@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace TinyJson
+namespace SpecFlow.Internal.Json
 {
     //Really simple JSON writer
     //- Outputs JSON structures from an object
@@ -80,11 +80,11 @@ namespace TinyJson
                 stringBuilder.Append(((bool)item) ? "true" : "false");
             }
             else if (type.IsEnum)
-            {
-                stringBuilder.Append('"');
-                stringBuilder.Append(item.ToString());
-                stringBuilder.Append('"');
-            }
+                {
+                    stringBuilder.Append('"');
+                    stringBuilder.Append(item.ToString());
+                    stringBuilder.Append('"');
+                }
             else if (item is IList)
             {
                 stringBuilder.Append('[');
