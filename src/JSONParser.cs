@@ -243,6 +243,14 @@ namespace SpecFlow.Internal.Json
                 }
                 return dictionary;
             }
+            if (type == typeof(TimeSpan))
+            {
+                if (json[0] == '"')
+                    json = json.Substring(1, json.Length - 2);
+
+                TimeSpan.TryParse(json, System.Globalization.CultureInfo.InvariantCulture, out var timeSpan);
+                return timeSpan;
+            }
             if (type == typeof(object))
             {
                 return ParseAnonymousValue(json);
