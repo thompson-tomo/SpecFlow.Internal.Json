@@ -3,13 +3,18 @@
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-name: 1.0.$(Rev:r)
+name: $(GitAssemblyInformationalVersion)
 
 trigger:
   batch: true
   branches:
     include:
-    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+    - master  
+    
+pr:
+  branches:
+    include:
+    - '*' # must quote since "*" is a YAML reserved character; we want a string
 
 pool:
   vmImage: 'windows-2019'
@@ -37,3 +42,9 @@ steps:
     command: test
     projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration)'
+    
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: NuGet packages'
+  inputs:
+    PathtoPublish: GeneratedNugetPackages/Release
+    ArtifactName: NuGetPackages
