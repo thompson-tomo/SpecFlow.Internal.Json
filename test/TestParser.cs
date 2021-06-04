@@ -5,7 +5,9 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SpecFlow.Internal.Json;
+
+#pragma warning disable CS0649 // not production code
+#pragma warning disable CS0414 // not production code
 
 namespace SpecFlow.Internal.Json.Tests
 {
@@ -504,3 +506,6 @@ namespace SpecFlow.Internal.Json.Tests
         }
     }
 }
+
+#pragma warning restore CS0414
+#pragma warning restore CS0649
