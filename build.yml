@@ -1,0 +1,39 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+name: 1.0.$(Rev:r)
+
+trigger:
+  batch: true
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET Core Sdk'
+  inputs:
+    packageType: sdk
+    version: 3.1.x
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet Build
+  inputs:
+    command: build
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet Test
+  inputs:
+    command: test
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration)'
