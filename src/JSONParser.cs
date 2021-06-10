@@ -396,7 +396,11 @@ namespace SpecFlow.Internal.Json
                 if (nameToField.TryGetValue(key, out fieldInfo))
                     fieldInfo.SetValue(instance, ParseValue(fieldInfo.FieldType, value));
                 else if (nameToProperty.TryGetValue(key, out propertyInfo))
-                    propertyInfo.SetValue(instance, ParseValue(propertyInfo.PropertyType, value), null);
+                {
+                    var setMethod = propertyInfo.GetSetMethod(true);
+                    if (setMethod != null && setMethod.IsPublic && !setMethod.IsStatic)
+                        propertyInfo.SetValue(instance, ParseValue(propertyInfo.PropertyType, value), null);
+                }
             }
 
             return instance;

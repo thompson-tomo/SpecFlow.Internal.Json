@@ -702,6 +702,21 @@ namespace SpecFlow.Internal.Json.Tests
             var actual = json.FromJson<NullableGuidTest>();
             Assert.AreEqual(valueInJson, actual.Id);
         }
+
+        public class NoSetterClass
+        {
+            public string Text { get; } = "No touchy!";
+        }
+
+        [TestMethod]
+        public void TestObjectWithoutSetMethod()
+        {
+            var newText = "Touch!";
+            var actual = $"{{\"Text\":\"{newText}\"}}".FromJson<NoSetterClass>();
+
+            Assert.AreNotEqual(actual.Text, newText);
+            Assert.AreEqual(new NoSetterClass().Text, actual.Text);
+        }
     }
 }
 
