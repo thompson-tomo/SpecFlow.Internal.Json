@@ -82,6 +82,16 @@ namespace SpecFlow.Internal.Json
             {
                 stringBuilder.Append(((bool)item) ? "true" : "false");
             }
+            else if (item is DateTime dateTime)
+            {
+                DefaultDateTimeFormatter.SerializeDateTime(stringBuilder, dateTime);
+            }
+            else if (item is TimeSpan timeSpan)
+            {
+                stringBuilder.Append('\"');
+                stringBuilder.Append(timeSpan.ToString());
+                stringBuilder.Append('\"');
+            }
             else if (type.IsEnum)
             {
                 if (_settings.UseEnumUnderlyingValues)

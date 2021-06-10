@@ -128,6 +128,10 @@ namespace SpecFlow.Internal.Json
 
         internal static object ParseValue(Type type, string json)
         {
+            if (json == "null")
+            {
+                return null;
+            }
             if (type == typeof(string))
             {
                 if (json.Length <= 2)
@@ -173,9 +177,9 @@ namespace SpecFlow.Internal.Json
                 decimal.TryParse(json, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out result);
                 return result;
             }
-            if (json == "null")
+            if (type == typeof(DateTime) || type == typeof(DateTime?))
             {
-                return null;
+                return DefaultDateTimeFormatter.DeserializeDateTime(json);
             }
             if (type.IsEnum)
             {
@@ -247,10 +251,9 @@ namespace SpecFlow.Internal.Json
                 }
                 return dictionary;
             }
-            if (type == typeof(TimeSpan))
+            if (type == typeof(TimeSpan) || type == typeof(TimeSpan?))
             {
-                if (json[0] == '"')
-                    json = json.Substring(1, json.Length - 2);
+                json = json.Replace("\"", "");
 
                 TimeSpan.TryParse(json, System.Globalization.CultureInfo.InvariantCulture, out var timeSpan);
                 return timeSpan;
