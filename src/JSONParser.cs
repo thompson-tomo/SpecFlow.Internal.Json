@@ -342,6 +342,10 @@ namespace SpecFlow.Internal.Json
         {
             object instance = FormatterServices.GetUninitializedObject(type);
 
+            //If the Type has a public parameterless ctor, invoke it
+            var ctor = type.GetConstructor(Type.EmptyTypes);
+            ctor?.Invoke(instance, null);
+
             //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
             List<string> elems = Split(json);
             if (elems.Count % 2 != 0)

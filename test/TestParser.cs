@@ -504,6 +504,66 @@ namespace SpecFlow.Internal.Json.Tests
             var simpleObject = expected.FromJson<SimpleObject>();
             Assert.AreEqual(null, simpleObject.C);
         }
+
+        public class TestClassWithCtor : IEquatable<TestClassWithCtor>
+        {
+            public List<int> Numbers { get; set; }
+            public string Text { get; set; } = "Add two numbers";
+            public int TargetYear { get; set; }
+            public List<string> Errors { get; set; }
+
+            public string TextTwo = "AddTwoMembers";
+
+            public TestClassWithCtor()
+            {
+                Numbers = new List<int>();
+                TargetYear = DateTime.Now.Year;
+            }
+
+            public bool Equals(TestClassWithCtor other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return TextTwo == other.TextTwo && 
+                       Numbers.SequenceEqual(other.Numbers) && 
+                       Text == other.Text && 
+                       TargetYear == other.TargetYear && 
+                       ((Errors == null && other.Errors == null) ||
+                       (Errors.SequenceEqual(other.Errors)));
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((TestClassWithCtor) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (TextTwo != null ? TextTwo.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (Numbers != null ? Numbers.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (Text != null ? Text.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ TargetYear;
+                    hashCode = (hashCode * 397) ^ (Errors != null ? Errors.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestObjectWithCtor()
+        {
+            var json = "{}";
+
+            var expected = new TestClassWithCtor();
+            var actual = json.FromJson<TestClassWithCtor>();
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
 
