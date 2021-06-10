@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
@@ -363,6 +364,16 @@ namespace SpecFlow.Internal.Json
                 nameToProperty = CreateMemberNameDictionary(type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
                 propertyInfoCache.Add(type, nameToProperty);
             }
+            
+            foreach (var property in nameToProperty)
+            {
+                var propertyInfo = property.Value;
+                if (propertyInfo.IsDefined(typeof(DefaultValueAttribute), true))
+                {
+                    var defaultValue = Attribute.GetCustomAttribute(propertyInfo, typeof(DefaultValueAttribute), true) as DefaultValueAttribute;
+                    propertyInfo.SetValue(instance, defaultValue?.Value, null);
+                }
+            }
 
             for (int i = 0; i < elems.Count; i += 2)
             {
@@ -370,7 +381,7 @@ namespace SpecFlow.Internal.Json
                     continue;
                 string key = elems[i].Substring(1, elems[i].Length - 2);
                 string value = elems[i + 1];
-
+                
                 FieldInfo fieldInfo;
                 PropertyInfo propertyInfo;
                 if (nameToField.TryGetValue(key, out fieldInfo))

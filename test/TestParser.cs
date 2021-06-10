@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -524,12 +525,12 @@ namespace SpecFlow.Internal.Json.Tests
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
-                return TextTwo == other.TextTwo && 
+                return TextTwo == other.TextTwo &&
                        Numbers.SequenceEqual(other.Numbers) && 
                        Text == other.Text && 
-                       TargetYear == other.TargetYear && 
+                       TargetYear == other.TargetYear &&
                        ((Errors == null && other.Errors == null) ||
-                       (Errors.SequenceEqual(other.Errors)));
+                        (Errors.SequenceEqual(other.Errors)));
             }
 
             public override bool Equals(object obj)
@@ -553,7 +554,7 @@ namespace SpecFlow.Internal.Json.Tests
                 }
             }
         }
-
+        
         [TestMethod]
         public void TestObjectWithCtor()
         {
@@ -563,6 +564,70 @@ namespace SpecFlow.Internal.Json.Tests
             var actual = json.FromJson<TestClassWithCtor>();
 
             Assert.AreEqual(expected, actual);
+        }
+
+
+        public class TestClassWithDefaultValues : IEquatable<TestClassWithDefaultValues>
+        {
+            [DefaultValue(12)]
+            public int TestValue { get; set; }
+
+            [DefaultValue(null)]
+            public string NullValue { get; set; }
+
+            [DefaultValue(Color.Blue)]
+            public Color MyColor { get; set; }
+
+            public bool Equals(TestClassWithDefaultValues other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return TestValue == other.TestValue && 
+                       NullValue == other.NullValue && 
+                       MyColor == other.MyColor;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((TestClassWithDefaultValues) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = TestValue;
+                    hashCode = (hashCode * 397) ^ (NullValue != null ? NullValue.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int) MyColor;
+                    return hashCode;
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestObjectWithDefaultValueAttributes()
+        {
+            var json = "{}";
+            
+            var actual = json.FromJson<TestClassWithDefaultValues>();
+
+            Assert.AreEqual(12, actual.TestValue);
+            Assert.AreEqual(null, actual.NullValue);
+            Assert.AreEqual(Color.Blue, actual.MyColor);
+        }
+
+        [TestMethod]
+        public void TestObjectWithDefaultValueAttributeButValueFromJson()
+        {
+            var valueInJson = 107;
+            var json = $"{{\"TestValue\":{valueInJson}}}";
+            
+            var actual = json.FromJson<TestClassWithDefaultValues>();
+
+            Assert.AreEqual(valueInJson, actual.TestValue);
         }
     }
 }
