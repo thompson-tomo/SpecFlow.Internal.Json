@@ -92,6 +92,12 @@ namespace SpecFlow.Internal.Json
                 stringBuilder.Append(timeSpan.ToString());
                 stringBuilder.Append('\"');
             }
+            else if (item is Guid guid)
+            {
+                stringBuilder.Append('\"');
+                stringBuilder.Append(guid.ToString());
+                stringBuilder.Append('\"');
+            }
             else if (type.IsEnum)
             {
                 if (_settings.UseEnumUnderlyingValues)

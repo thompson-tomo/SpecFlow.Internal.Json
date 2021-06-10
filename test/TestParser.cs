@@ -629,6 +629,79 @@ namespace SpecFlow.Internal.Json.Tests
 
             Assert.AreEqual(valueInJson, actual.TestValue);
         }
+
+        public class GuidTest : IEquatable<GuidTest>
+        {
+            public Guid Id { get; set; }
+
+            public bool Equals(GuidTest other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Id.Equals(other.Id);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((GuidTest) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return Id.GetHashCode();
+            }
+        }
+
+        [TestMethod]
+        public void TestObjectWithGuid()
+        {
+            Assert.AreEqual(new GuidTest(), "{\"Id\":\"00000000-0000-0000-0000-000000000000\"}".FromJson<GuidTest>());
+            
+            var valueInJson = Guid.NewGuid();
+            var json = $"{{\"Id\":\"{valueInJson}\"}}";
+            var actual = json.FromJson<GuidTest>();
+            Assert.AreEqual(valueInJson, actual.Id);
+        }
+
+        public class NullableGuidTest : IEquatable<NullableGuidTest>
+        {
+            public Guid? Id { get; set; }
+
+            public bool Equals(NullableGuidTest other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return Nullable.Equals(Id, other.Id);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((NullableGuidTest) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                return Id.GetHashCode();
+            }
+        }
+
+        [TestMethod]
+        public void TestObjectWithNullableGuid()
+        {
+            Assert.AreEqual(new NullableGuidTest(), "{}".FromJson<NullableGuidTest>());
+            Assert.AreEqual(new NullableGuidTest(), "{\"Id\":null}".FromJson<NullableGuidTest>());
+            
+            var valueInJson = Guid.NewGuid();
+            var json = $"{{\"Id\":\"{valueInJson}\"}}";
+            var actual = json.FromJson<NullableGuidTest>();
+            Assert.AreEqual(valueInJson, actual.Id);
+        }
     }
 }
 

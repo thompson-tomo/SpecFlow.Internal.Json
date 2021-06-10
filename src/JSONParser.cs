@@ -258,6 +258,12 @@ namespace SpecFlow.Internal.Json
                 TimeSpan.TryParse(json, System.Globalization.CultureInfo.InvariantCulture, out var timeSpan);
                 return timeSpan;
             }
+            if (type == typeof(Guid) || type == typeof(Guid?))
+            {
+                json = json.Replace("\"", "");
+
+                return new Guid(json);
+            }
             if (type == typeof(object))
             {
                 return ParseAnonymousValue(json);

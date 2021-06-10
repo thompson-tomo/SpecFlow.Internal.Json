@@ -249,6 +249,26 @@ namespace SpecFlow.Internal.Json.Tests
             Assert.AreEqual("{\"FirstName\":\"Bob\",\"Address\":null}", new { FirstName = "Bob", Address = (string)null }.ToJson(settings));
         }
 
+        public class TestGuidClass
+        {
+            public Guid Id { get; set; }
+            public Guid? PersonId { get; set; }
+        }
+
+        [TestMethod]
+        public void TestGuid()
+        {
+            Assert.AreEqual("{\"Id\":\"00000000-0000-0000-0000-000000000000\"}", new TestGuidClass().ToJson());
+            Assert.AreEqual("{\"Id\":\"00000000-0000-0000-0000-000000000000\",\"PersonId\":null}", new TestGuidClass().ToJson(new JsonSerializerSettings(false)));
+
+            var id = Guid.NewGuid();
+            Assert.AreEqual($"{{\"Id\":\"{id}\"}}", new TestGuidClass() { Id = id }.ToJson());
+            Assert.AreEqual($"{{\"Id\":\"{id}\",\"PersonId\":null}}", new TestGuidClass() { Id = id }.ToJson(new JsonSerializerSettings(false)));
+
+            var personId = Guid.NewGuid();
+            Assert.AreEqual($"{{\"Id\":\"{id}\",\"PersonId\":\"{personId}\"}}", new TestGuidClass() { Id = id, PersonId = personId}.ToJson());
+        }
+
     }
 }
 
