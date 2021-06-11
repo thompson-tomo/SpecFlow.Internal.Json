@@ -380,7 +380,15 @@ namespace SpecFlow.Internal.Json
                 if (propertyInfo.IsDefined(typeof(DefaultValueAttribute), true))
                 {
                     var defaultValue = Attribute.GetCustomAttribute(propertyInfo, typeof(DefaultValueAttribute), true) as DefaultValueAttribute;
-                    propertyInfo.SetValue(instance, defaultValue?.Value, null);
+                    var value = defaultValue?.Value;
+
+                    if (value != null)
+                    {
+                        // convert the value to the target property's type
+                        value = TypeDescriptor.GetConverter(propertyInfo.PropertyType).ConvertFromString(value.ToString());
+                    }
+
+                    propertyInfo.SetValue(instance, value, null);
                 }
             }
 

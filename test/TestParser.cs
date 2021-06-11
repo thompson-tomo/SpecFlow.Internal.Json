@@ -578,13 +578,26 @@ namespace SpecFlow.Internal.Json.Tests
             [DefaultValue(Color.Blue)]
             public Color MyColor { get; set; }
 
+            [DefaultValue("0:0:0.1")]
+            public TimeSpan Start { get; set; }
+
+            [DefaultValue(3)]
+            public Color YourColor { get; set; }
+
+            [DefaultValue("2")]
+            public Color OurColor { get; set; }
+
+
             public bool Equals(TestClassWithDefaultValues other)
             {
                 if (ReferenceEquals(null, other)) return false;
                 if (ReferenceEquals(this, other)) return true;
                 return TestValue == other.TestValue && 
                        NullValue == other.NullValue && 
-                       MyColor == other.MyColor;
+                       MyColor == other.MyColor && 
+                       Start.Equals(other.Start) && 
+                       YourColor == other.YourColor && 
+                       OurColor == other.OurColor;
             }
 
             public override bool Equals(object obj)
@@ -602,11 +615,14 @@ namespace SpecFlow.Internal.Json.Tests
                     var hashCode = TestValue;
                     hashCode = (hashCode * 397) ^ (NullValue != null ? NullValue.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (int) MyColor;
+                    hashCode = (hashCode * 397) ^ Start.GetHashCode();
+                    hashCode = (hashCode * 397) ^ (int) YourColor;
+                    hashCode = (hashCode * 397) ^ (int) OurColor;
                     return hashCode;
                 }
             }
         }
-
+        
         [TestMethod]
         public void TestObjectWithDefaultValueAttributes()
         {
@@ -617,6 +633,9 @@ namespace SpecFlow.Internal.Json.Tests
             Assert.AreEqual(12, actual.TestValue);
             Assert.AreEqual(null, actual.NullValue);
             Assert.AreEqual(Color.Blue, actual.MyColor);
+            Assert.AreEqual(Color.Yellow, actual.YourColor);
+            Assert.AreEqual(Color.Blue, actual.OurColor);
+            Assert.AreEqual(TimeSpan.Parse("0:0:0.1"), actual.Start);
         }
 
         [TestMethod]
