@@ -8,7 +8,7 @@
     <PackageId>SpecFlow.Internal.Json</PackageId>
     <Title>SpecFlow.Internal.Json</Title>
     <Authors>SpecFlow Team</Authors>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenceExpression>LICENSE</PackageLicenceExpression>
     <PackageProjectUrl>https://specflow.org</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SpecFlowOSS/SpecFlow.Internal.Json</RepositoryUrl>
     <description>A really simple C# JSON parser.</description>
